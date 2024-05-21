@@ -4,6 +4,8 @@ import CounterComponent from './components/CounterComponent';
 import RenderComponent from './components/RenderComponent';
 import Todo from './components/Todo/Todo';
 import TodosTwo from './components/Todo/TodosTwo';
+import MyClassComponent from './components/MyClassComponent';
+import MyClassTodoComponent from './components/MyClassTodoComponent';
 
 const App = () => {
   const [todos, setTodos] = useState([
@@ -20,11 +22,14 @@ const App = () => {
     const updatedItems = todos.filter(todo => todo.id !== todoId)
     setTodos(updatedItems)
   }
+  const [isShowTimer, setIsShowTimer] = useState(false)
   return (
     <div className="App">
       <header className="App-header">
-        <Todo />
+        {isShowTimer ? <MyClassTodoComponent /> : <Todo />}
+        {/* <MyClassComponent /> */}
         <TodosTwo todos={todos} deleteTodo={deleteTodo} addNewTodo={addNewTodo} />
+        <button onClick={() => setIsShowTimer((prev) => !prev)}>Show / hide timer</button>
       </header>
       <main className="main">
         <RenderComponent />
