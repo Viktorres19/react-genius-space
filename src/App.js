@@ -1,35 +1,33 @@
 import { useState } from 'react';
 import './App.css';
 import CounterComponent from './components/CounterComponent';
+import RenderComponent from './components/RenderComponent';
+import Todo from './components/Todo/Todo';
+import TodosTwo from './components/Todo/TodosTwo';
 
-function App() {
-  const [input, setInput] = useState('')
-  const [item, setItem] = useState(['First element'])
-
-  const onClickHandler = () => {
-    // const newElement = 'new element';
-    const updatedElement = [...item, input];
-    setItem(updatedElement)
-    setInput('')
+const App = () => {
+  const [todos, setTodos] = useState([
+    { id: 1, todo: 'firstTodo'},
+    { id: 2, todo: 'secondTodo'},
+    { id: 3, todo: 'thirdTodo'},
+    { id: 4, todo: 'fourthTodo'},
+  ])
+  const addNewTodo = (newTodo) => {
+    const updatedElement = [...todos, newTodo];
+    setTodos(updatedElement)
   }
-  const onChangeHandler = (e) => {
-      const value = e.target.value;
-      console.log('change')
-      setInput(value);
+  const deleteTodo = (todoId) => {
+    const updatedItems = todos.filter(todo => todo.id !== todoId)
+    setTodos(updatedItems)
   }
   return (
     <div className="App">
       <header className="App-header">
-        <p>{input}</p>
-        <input type="text" value={input} onInput={onChangeHandler} />
-        <ul>
-          {item.map((element, index) => (
-            <li key={index}>{element} {index}</li>
-            ))}
-        </ul>
-        <button onClick={onClickHandler}>Add new element</button>
+        <Todo />
+        <TodosTwo todos={todos} deleteTodo={deleteTodo} addNewTodo={addNewTodo} />
       </header>
       <main className="main">
+        <RenderComponent />
         <CounterComponent />
       </main>
     </div>
