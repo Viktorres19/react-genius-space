@@ -1,42 +1,48 @@
-import { useState } from 'react';
+import { useEffect, useReducer, useState, useRef } from 'react';
 import './App.css';
-import CounterComponent from './components/CounterComponent';
-import RenderComponent from './components/RenderComponent';
-import Todo from './components/Todo/Todo';
-import TodosTwo from './components/Todo/TodosTwo';
-import MyClassComponent from './components/MyClassComponent';
-import MyClassTodoComponent from './components/MyClassTodoComponent';
+import UnmountComponent from './components/UnmountComponent';
 
 const App = () => {
-  const [todos, setTodos] = useState([
-    { id: 1, todo: 'firstTodo'},
-    { id: 2, todo: 'secondTodo'},
-    { id: 3, todo: 'thirdTodo'},
-    { id: 4, todo: 'fourthTodo'},
-  ])
-  const addNewTodo = (newTodo) => {
-    const updatedElement = [...todos, newTodo];
-    setTodos(updatedElement)
+  const headerRef = useRef();
+  const inputRef = useRef();
+  const handleFocus = () => {
+    inputRef.current.focus();
+    console.log(inputRef.current.value)
   }
-  const deleteTodo = (todoId) => {
-    const updatedItems = todos.filter(todo => todo.id !== todoId)
-    setTodos(updatedItems)
+  console.log(headerRef.current)
+  const reducer = (state, action) => {
+    if(action.type === 'increment') {
+      return {count: state.count + 1}
+    }
+    if(action.type === 'decrement') {
+      return {count: state.count - 1}
+    }
+    if(action.type === 'reset') {
+      return {count: 0}
+    }
   }
-  const [isShowTimer, setIsShowTimer] = useState(false)
+  const [value, dispatch] = useReducer(reducer, { count: 0 })
+  // const [isMounted, setIsMounted] = useState(false)
+
+  const handleClick = (type) => {
+    // setValue((prevValue) => prevValue + 1);
+    dispatch(type)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        {isShowTimer ? <MyClassTodoComponent /> : <Todo />}
-        {/* <MyClassComponent /> */}
-        <TodosTwo todos={todos} deleteTodo={deleteTodo} addNewTodo={addNewTodo} />
-        <button onClick={() => setIsShowTimer((prev) => !prev)}>Show / hide timer</button>
+    <div className='App'>
+      <header className='App-header' ref={headerRef}>
+      <input ref={inputRef} />
+      <p>{value.count}</p>
+      {/* <div>
+        {isMounted ? <UnmountComponent /> : <div>Who are you</div> }
+      </div> */}
+        <button onClick={() => handleClick({type: 'increment'})}>Inc</button>
+        <button onClick={() => handleClick({type: 'decrement'})}>Dec</button>
+        <button onClick={() => handleClick({type: 'reset'})}>Reset</button>
+        <button onClick={handleFocus}>Focus</button>
       </header>
-      <main className="main">
-        <RenderComponent />
-        <CounterComponent />
-      </main>
     </div>
-  );
+  )
 }
 
 export default App;
